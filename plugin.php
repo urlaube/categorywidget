@@ -6,7 +6,7 @@
     This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a0
+    @version 0.1a1
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -17,11 +17,11 @@
   if (!defined("URLAUBE")) { die(""); }
 
   if (!class_exists("CategoryWidget")) {
-    class CategoryWidget implements Plugin {
+    class CategoryWidget extends Translatable implements Plugin, Translation {
 
       // RUNTIME FUNCTIONS
 
-      public static function plugin() {
+      public function plugin() {
         $result = new Content();
 
         $categories = array();
@@ -72,7 +72,7 @@
         }
         $content .= "</div>";
 
-        $result->set(TITLE,   "Kategorien");
+        $result->set(TITLE,   gl("Kategorien"));
         $result->set(CONTENT, $content);
 
         return $result;
@@ -80,7 +80,11 @@
 
     }
 
+    // instantiate translatable handler
+    $plugin = new CategoryWidget();
+    $plugin->setTranslationsPath(__DIR__.DS."lang".DS);
+
     // register plugin
-    Plugins::register("CategoryWidget", "plugin", ON_WIDGETS);
+    Plugins::register($plugin, "plugin", ON_WIDGETS);
   }
 
