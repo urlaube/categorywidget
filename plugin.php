@@ -80,7 +80,7 @@
 
     }
 
-    // instantiate translatable handler
+    // instantiate translatable plugin
     $plugin = new CategoryWidget();
     $plugin->setTranslationsPath(__DIR__.DS."lang".DS);
 
