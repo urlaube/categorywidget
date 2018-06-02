@@ -6,7 +6,7 @@
     This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a1
+    @version 0.1a2
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -17,11 +17,11 @@
   if (!defined("URLAUBE")) { die(""); }
 
   if (!class_exists("CategoryWidget")) {
-    class CategoryWidget extends Translatable implements Plugin, Translation {
+    class CategoryWidget extends Base implements Plugin {
 
       // RUNTIME FUNCTIONS
 
-      public function plugin() {
+      public static function plugin() {
         $result = new Content();
 
         $categories = array();
@@ -66,25 +66,25 @@
 
         $content = "<div>".NL;
         foreach ($categories as $key => $value) {
-          $content .= "  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"".
-                      html(CategoryHandler::getUri(array(CATEGORY => $key, PAGE => 1))).
-                      "\">".html($key)."</a> (".html($value).")".BR.NL;
+          $content .= fhtml("  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
+                            CategoryHandler::getUri(array(CATEGORY => $key, PAGE => 1)),
+                            $key,
+                            $value);
         }
         $content .= "</div>";
 
-        $result->set(TITLE,   gl("Kategorien"));
         $result->set(CONTENT, $content);
+        $result->set(TITLE,   t("Kategorien", "CategoryWidget"));
 
         return $result;
       }
 
     }
 
-    // instantiate translatable plugin
-    $plugin = new CategoryWidget();
-    $plugin->setTranslationsPath(__DIR__.DS."lang".DS);
-
     // register plugin
-    Plugins::register($plugin, "plugin", ON_WIDGETS);
+    Plugins::register("CategoryWidget", "plugin", ON_WIDGETS);
+
+    // register translation
+    Translate::register(__DIR__.DS."lang".DS, "CategoryWidget");
   }
 
