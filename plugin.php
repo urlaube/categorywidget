@@ -6,7 +6,7 @@
     This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a2
+    @version 0.1a3
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -32,24 +32,27 @@
 
                                // check that $content is not hidden
                                if (!ishidden($content)) {
-                                 // read the category
-                                 if ($content->isset(CATEGORY)) {
-                                   $seen = array();
+                                 // check that $content is not a redirect
+                                 if (!isredirect($content)) {
+                                   // read the category
+                                   if ($content->isset(CATEGORY)) {
+                                     $seen = array();
 
-                                   $catvalue = explode(SP, $content->get(CATEGORY));
-                                   foreach ($catvalue as $catvalue_item) {
-                                     // make sure that only valid characters are contained
-                                     if (1 === preg_match("@^[0-9A-Za-z\_\-]+$@", $catvalue_item)) {
-                                       $catvalue_item = strtolower($catvalue_item);
+                                     $catvalue = explode(SP, $content->get(CATEGORY));
+                                     foreach ($catvalue as $catvalue_item) {
+                                       // make sure that only valid characters are contained
+                                       if (1 === preg_match("@^[0-9A-Za-z\_\-]+$@", $catvalue_item)) {
+                                         $catvalue_item = strtolower($catvalue_item);
 
-                                       // only count each category once per content
-                                       if (!isset($seen[$catvalue_item])) {
-                                         $seen[$catvalue_item] = null;
+                                         // only count each category once per content
+                                         if (!isset($seen[$catvalue_item])) {
+                                           $seen[$catvalue_item] = null;
 
-                                         if (isset($categories[$catvalue_item])) {
-                                           $categories[$catvalue_item]++;
-                                         } else {
-                                           $categories[$catvalue_item] = 1;
+                                           if (isset($categories[$catvalue_item])) {
+                                             $categories[$catvalue_item]++;
+                                           } else {
+                                             $categories[$catvalue_item] = 1;
+                                           }
                                          }
                                        }
                                      }

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a3 (27.06.2018)
+### Feature
+* updated to support redirect content elements
+
 ## 0.1a2 (02.06.2018)
 ### Feature
 * rewrote to use the new translation mechanism of Urlaube 0.1a4
