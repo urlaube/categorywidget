@@ -6,7 +6,7 @@
     This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a4
+    @version 0.1a5
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -31,14 +31,15 @@
                                $result = null;
 
                                // check that $content is not hidden
-                               if (!ishidden($content)) {
-                                 // check that $content is not a redirect
-                                 if (!isredirect($content)) {
+                               if (!istrue(value($content, HIDDEN))) {
+                                 // check that $content is not a relocation
+                                 if (null === value($content, RELOCATE)) {
                                    // read the category
-                                   if ($content->isset(CATEGORY)) {
+                                   $catvalue = value($content, CATEGORY);
+                                   if (null !== $catvalue) {
                                      $seen = array();
 
-                                     $catvalue = explode(SP, $content->get(CATEGORY));
+                                     $catvalue = explode(SP, $catvalue);
                                      foreach ($catvalue as $catvalue_item) {
                                        // make sure that only valid characters are contained
                                        if (1 === preg_match("@^[0-9A-Za-z\_\-]+$@", $catvalue_item)) {
