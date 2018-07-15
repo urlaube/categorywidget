@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a4 (15.07.2018)
+### Bugfixes
+* return NULL if there are not categories for the list
+
 ## 0.1a3 (27.06.2018)
 ### Feature
 * updated to support redirect content elements

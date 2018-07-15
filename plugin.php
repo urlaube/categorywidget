@@ -6,7 +6,7 @@
     This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a3
+    @version 0.1a4
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -22,7 +22,7 @@
       // RUNTIME FUNCTIONS
 
       public static function plugin() {
-        $result = new Content();
+        $result = null;
 
         $categories = array();
 
@@ -64,20 +64,23 @@
                              },
                              true);
 
-        // sort the categories
-        ksort($categories);
+        if (0 < count($categories)) {
+          // sort the categories
+          ksort($categories);
 
-        $content = "<div>".NL;
-        foreach ($categories as $key => $value) {
-          $content .= fhtml("  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
-                            CategoryHandler::getUri(array(CATEGORY => $key, PAGE => 1)),
-                            $key,
-                            $value);
+          $content = "<div>".NL;
+          foreach ($categories as $key => $value) {
+            $content .= fhtml("  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
+                              CategoryHandler::getUri(array(CATEGORY => $key, PAGE => 1)),
+                              $key,
+                              $value);
+          }
+          $content .= "</div>";
+
+          $result = new Content();
+          $result->set(CONTENT, $content);
+          $result->set(TITLE,   t("Kategorien", "CategoryWidget"));
         }
-        $content .= "</div>";
-
-        $result->set(CONTENT, $content);
-        $result->set(TITLE,   t("Kategorien", "CategoryWidget"));
 
         return $result;
       }
