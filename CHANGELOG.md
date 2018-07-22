@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a6 (22.07.2018)
+### Features
+* check for `hiddenfromcategory`
+
 ## 0.1a5 (15.07.2018)
 ### Features
 * use the preferred way of reading Content values

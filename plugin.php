@@ -6,7 +6,7 @@
     This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a5
+    @version 0.1a6
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -32,27 +32,30 @@
 
                                // check that $content is not hidden
                                if (!istrue(value($content, HIDDEN))) {
-                                 // check that $content is not a relocation
-                                 if (null === value($content, RELOCATE)) {
-                                   // read the category
-                                   $catvalue = value($content, CATEGORY);
-                                   if (null !== $catvalue) {
-                                     $seen = array();
+                                 // check that $content is not hidden from category
+                                 if (!istrue(value($content, HIDDENFROMCATEGORY))) {
+                                   // check that $content is not a relocation
+                                   if (null === value($content, RELOCATE)) {
+                                     // read the category
+                                     $catvalue = value($content, CATEGORY);
+                                     if (null !== $catvalue) {
+                                       $seen = array();
 
-                                     $catvalue = explode(SP, $catvalue);
-                                     foreach ($catvalue as $catvalue_item) {
-                                       // make sure that only valid characters are contained
-                                       if (1 === preg_match("@^[0-9A-Za-z\_\-]+$@", $catvalue_item)) {
-                                         $catvalue_item = strtolower($catvalue_item);
+                                       $catvalue = explode(SP, $catvalue);
+                                       foreach ($catvalue as $catvalue_item) {
+                                         // make sure that only valid characters are contained
+                                         if (1 === preg_match("@^[0-9A-Za-z\_\-]+$@", $catvalue_item)) {
+                                           $catvalue_item = strtolower($catvalue_item);
 
-                                         // only count each category once per content
-                                         if (!isset($seen[$catvalue_item])) {
-                                           $seen[$catvalue_item] = null;
+                                           // only count each category once per content
+                                           if (!isset($seen[$catvalue_item])) {
+                                             $seen[$catvalue_item] = null;
 
-                                           if (isset($categories[$catvalue_item])) {
-                                             $categories[$catvalue_item]++;
-                                           } else {
-                                             $categories[$catvalue_item] = 1;
+                                             if (isset($categories[$catvalue_item])) {
+                                               $categories[$catvalue_item]++;
+                                             } else {
+                                               $categories[$catvalue_item] = 1;
+                                             }
                                            }
                                          }
                                        }
