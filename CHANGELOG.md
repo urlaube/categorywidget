@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a7 (17.10.2018)
+### Features
+* updated plugin to be compatible with Urlaube 0.1a7
+
 ## 0.1a6 (22.07.2018)
 ### Features
 * check for `hiddenfromcategory`
@@ -27,4 +31,3 @@
 ## 0.1a0 (26.05.2018)
 ### Features
 * initial version
-

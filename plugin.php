@@ -3,10 +3,11 @@
   /**
     This is the CategoryWidget plugin.
 
-    This file contains the CategoryWidget plugin. It provides a widget that lists all available categories.
+    This file contains the CategoryWidget plugin. It provides a widget that
+    lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a6
+    @version 0.1a7
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -16,85 +17,85 @@
   // prevent script from getting called directly
   if (!defined("URLAUBE")) { die(""); }
 
-  if (!class_exists("CategoryWidget")) {
-    class CategoryWidget extends Base implements Plugin {
+  class CategoryWidget extends BaseSingleton implements Plugin {
 
-      // RUNTIME FUNCTIONS
+    // RUNTIME FUNCTIONS
 
-      public static function plugin() {
-        $result = null;
+    public static function plugin() {
+      $result = null;
 
-        $categories = array();
+      $categories = [];
 
-        File::loadContentDir(USER_CONTENT_PATH, true,
-                             function ($content) use (&$categories) {
-                               $result = null;
+      FilePlugin::loadContentDir(USER_CONTENT_PATH, true,
+                                 function ($content) use (&$categories) {
+                                   $result = null;
 
-                               // check that $content is not hidden
-                               if (!istrue(value($content, HIDDEN))) {
-                                 // check that $content is not hidden from category
-                                 if (!istrue(value($content, HIDDENFROMCATEGORY))) {
-                                   // check that $content is not a relocation
-                                   if (null === value($content, RELOCATE)) {
-                                     // read the category
-                                     $catvalue = value($content, CATEGORY);
-                                     if (null !== $catvalue) {
-                                       $seen = array();
+                                   // check that $content is not hidden
+                                   if (!istrue(value($content, HIDDEN))) {
+                                     // check that $content is not hidden from category
+                                     if (!istrue(value($content, HIDDENFROMCATEGORY))) {
+                                       // check that $content is not a relocation
+                                       if (null === value($content, RELOCATE)) {
+                                         // read the category
+                                         $catvalue = value($content, CATEGORY);
+                                         if (null !== $catvalue) {
+                                           $seen = [];
 
-                                       $catvalue = explode(SP, $catvalue);
-                                       foreach ($catvalue as $catvalue_item) {
-                                         // make sure that only valid characters are contained
-                                         if (1 === preg_match("@^[0-9A-Za-z\_\-]+$@", $catvalue_item)) {
-                                           $catvalue_item = strtolower($catvalue_item);
+                                           $catvalue = explode(SP, $catvalue);
+                                           foreach ($catvalue as $catvalue_item) {
+                                             // make sure that only valid characters are contained
+                                             if (1 === preg_match("~^[0-9A-Za-z\_\-]+$~", $catvalue_item)) {
+                                               $catvalue_item = strtolower($catvalue_item);
 
-                                           // only count each category once per content
-                                           if (!isset($seen[$catvalue_item])) {
-                                             $seen[$catvalue_item] = null;
+                                               // only count each category once per content
+                                               if (!isset($seen[$catvalue_item])) {
+                                                 $seen[$catvalue_item] = null;
 
-                                             if (isset($categories[$catvalue_item])) {
-                                               $categories[$catvalue_item]++;
-                                             } else {
-                                               $categories[$catvalue_item] = 1;
+                                                 if (isset($categories[$catvalue_item])) {
+                                                   $categories[$catvalue_item]++;
+                                                 } else {
+                                                   $categories[$catvalue_item] = 1;
+                                                 }
+                                               }
                                              }
                                            }
                                          }
                                        }
                                      }
                                    }
-                                 }
-                               }
 
-                               return null;
-                             },
-                             true);
+                                   return null;
+                                 },
+                                 true);
 
-        if (0 < count($categories)) {
-          // sort the categories
-          ksort($categories);
+      if (0 < count($categories)) {
+        // sort the categories
+        ksort($categories);
 
-          $content = "<div>".NL;
-          foreach ($categories as $key => $value) {
-            $content .= fhtml("  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
-                              CategoryHandler::getUri(array(CATEGORY => $key, PAGE => 1)),
-                              $key,
-                              $value);
-          }
-          $content .= "</div>";
+        $content = fhtml("<div>".NL);
+        foreach ($categories as $key => $value) {
+          $metadata = new Content();
+          $metadata->set(CATEGORY, $key);
 
-          $result = new Content();
-          $result->set(CONTENT, $content);
-          $result->set(TITLE,   t("Kategorien", "CategoryWidget"));
+          $content .= fhtml("  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
+                            CategoryHandler::getUri($metadata),
+                            $key,
+                            $value);
         }
+        $content .= fhtml("</div>");
 
-        return $result;
+        $result = new Content();
+        $result->set(CONTENT, $content);
+        $result->set(TITLE,   t("Kategorien", CategoryWidget::class));
       }
 
+      return $result;
     }
 
-    // register plugin
-    Plugins::register("CategoryWidget", "plugin", ON_WIDGETS);
-
-    // register translation
-    Translate::register(__DIR__.DS."lang".DS, "CategoryWidget");
   }
 
+  // register plugin
+  Plugins::register(CategoryWidget::class, "plugin", ON_WIDGETS);
+
+  // register translation
+  Translate::register(__DIR__.DS."lang".DS, CategoryWidget::class);
