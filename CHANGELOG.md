@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a8 (25.10.2018)
+### Features
+* implemented support for caching plugins
+
 ## 0.1a7 (17.10.2018)
 ### Features
 * updated plugin to be compatible with Urlaube 0.1a7
