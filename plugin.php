@@ -7,7 +7,7 @@
     lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a8
+    @version 0.1a9
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -26,47 +26,46 @@
 
       $categories = [];
       if (!getcache(null, $categories, static::class)) {
-        FilePlugin::loadContentDir(USER_CONTENT_PATH, true,
-                                   function ($content) use (&$categories) {
-                                     $result = null;
+        callcontent(null, true, true,
+                    function ($content) use (&$categories) {
+                      $result = null;
 
-                                     // check that $content is not hidden
-                                     if (!istrue(value($content, HIDDEN))) {
-                                       // check that $content is not hidden from category
-                                       if (!istrue(value($content, HIDDENFROMCATEGORY))) {
-                                         // check that $content is not a relocation
-                                         if (null === value($content, RELOCATE)) {
-                                           // read the category
-                                           $catvalue = value($content, CATEGORY);
-                                           if (null !== $catvalue) {
-                                             $seen = [];
+                      // check that $content is not hidden
+                      if (!istrue(value($content, HidePlugin::HIDDEN))) {
+                        // check that $content is not hidden from category
+                        if (!istrue(value($content, HidePlugin::HIDDENFROMCATEGORY))) {
+                          // check that $content is not a relocation
+                          if (null === value($content, RelocatePlugin::RELOCATE)) {
+                            // read the category
+                            $catvalue = value($content, CATEGORY);
+                            if (null !== $catvalue) {
+                              $seen = [];
 
-                                             $catvalue = explode(SP, $catvalue);
-                                             foreach ($catvalue as $catvalue_item) {
-                                               // make sure that only valid characters are contained
-                                               if (1 === preg_match("~^[0-9A-Za-z\_\-]+$~", $catvalue_item)) {
-                                                 $catvalue_item = strtolower($catvalue_item);
+                              $catvalue = explode(SP, $catvalue);
+                              foreach ($catvalue as $catvalue_item) {
+                                // make sure that only valid characters are contained
+                                if (1 === preg_match("~^[0-9A-Za-z\_\-]+$~", $catvalue_item)) {
+                                  $catvalue_item = strtolower($catvalue_item);
 
-                                                 // only count each category once per content
-                                                 if (!isset($seen[$catvalue_item])) {
-                                                   $seen[$catvalue_item] = null;
+                                  // only count each category once per content
+                                  if (!isset($seen[$catvalue_item])) {
+                                    $seen[$catvalue_item] = null;
 
-                                                   if (isset($categories[$catvalue_item])) {
-                                                     $categories[$catvalue_item]++;
-                                                   } else {
-                                                     $categories[$catvalue_item] = 1;
-                                                   }
-                                                 }
-                                               }
-                                             }
-                                           }
-                                         }
-                                       }
-                                     }
+                                    if (isset($categories[$catvalue_item])) {
+                                      $categories[$catvalue_item]++;
+                                    } else {
+                                      $categories[$catvalue_item] = 1;
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
 
-                                     return null;
-                                   },
-                                   true);
+                      return null;
+                    });
 
         setcache(null, $categories, static::class);
       }
