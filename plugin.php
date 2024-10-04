@@ -7,7 +7,7 @@
     lists all available categories.
 
     @package urlaube\categorywidget
-    @version 0.1a9
+    @version 0.1a10
     @author  Yahe <hello@yahe.sh>
     @since   0.1a0
   */
@@ -81,7 +81,7 @@
 
           $content .= fhtml("  <span class=\"glyphicon glyphicon-tag\"></span> <a href=\"%s\">%s</a> (%d)".BR.NL,
                             CategoryHandler::getUri($metadata),
-                            $key,
+                            str_replace("_", SP, $key),
                             $value);
         }
         $content .= fhtml("</div>");

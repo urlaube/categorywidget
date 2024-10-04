@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1a10 (04.10.2024)
+### Features
+* replace `_` in category names with spaces
+
 ## 0.1a9 (03.11.2018)
 ### Features
 * updated plugin to be compatible with Urlaube 0.1a10
